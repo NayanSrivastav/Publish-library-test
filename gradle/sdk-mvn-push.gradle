@@ -1,0 +1,51 @@
+apply plugin: 'maven'
+
+def isReleaseBuild() {
+    return VERSION_NAME.contains("SNAPSHOT") == false
+}
+
+def getOutputDir() {
+    if (isReleaseBuild()) {
+        return "${project.buildDir}/releases"
+    } else {
+        return "${project.buildDir}/snapshots"
+    }
+}
+
+def getDestUrl() {
+    if (isReleaseBuild()) {
+        return "s3://my-bucket/releases"
+    } else {
+        return "s3://my-bucket/snapshots"
+    }
+}
+
+uploadArchives {
+    repositories {
+        // Use mavenDeployer instead of maven if trying to write to a local file first
+
+        // mavenDeployer {
+        //  repository(url: "file:///" + getOutputDir()) can also be used to copy to local file
+
+        maven {
+            url getDestUrl()
+
+            credentials(AwsCredentials) {
+                accessKey = "key"
+                secretKey = "password"
+            }
+
+            pom {
+                groupId = GROUP
+                artifactId = POM_ARTIFACT_ID
+                version = VERSION_NAME
+
+                project {
+                    name POM_NAME
+                    packaging POM_PACKAGING
+                    description POM_DESCRIPTION
+                }
+            }
+        }
+    }
+}
