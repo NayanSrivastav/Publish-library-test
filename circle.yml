@@ -10,7 +10,7 @@ dependencies:
 
   cache_directories:
     - /usr/local/android-sdk-linux/platforms/android-24
-    - /usr/local/android-sdk-linux/build-tools/24.5.0
+    - /usr/local/android-sdk-linux/build-tools/25.0.0
     - /usr/local/android-sdk-linux/extras/android/m2repository
     
     
